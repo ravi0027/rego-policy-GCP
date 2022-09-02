@@ -1,0 +1,44 @@
+package policy
+enable_legacy_abac_msg="Legacy Authorization (ABAC) is enabled"{
+enable_legacy_abac:=input.enable_legacy_abac
+enable_legacy_abac==true
+}else = ""
+ip_allocation_policy_msg="Alias IP ranges is disabled"{
+count(input.ip_allocation_policy)<1
+}else = ""
+private_cluster_config := input.private_cluster_config[0]
+private_cluster_config_disable{
+count(input.private_cluster_config)<1
+}
+private_cluster_config_disable{
+private_cluster_config.enable_private_endpoint!=true
+}
+private_cluster_config_disable{
+private_cluster_config.enable_private_nodes!=true
+}
+enable_binary_authorization_msg = "Binary authorization is not enabled"{
+input.enable_binary_authorization!=true
+}else = ""
+private_cluster_config_msg="Cluster is not priavte"{
+private_cluster_config_disable == true
+}else = ""
+node_config=input.node_config
+secure_boot_disable{
+count(node_config)<1
+}{
+count(node_config[0].shielded_instance_config)<1
+}
+{
+node_config[0].shielded_instance_config[0].enable_secure_boot!=true
+}
+secure_boot_msg="Secure Boot for Shielded GKE Nodes is not Enabled"{
+secure_boot_disable==true
+}else=""
+policyResult := {
+"enable_legacy_abac" : {
+"msg" : enable_legacy_abac_msg,
+},
+"ip_allocation_policy" : {
+"msg" : ip_allocation_policy_msg
+}
+}

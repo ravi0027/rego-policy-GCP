@@ -1,0 +1,136 @@
+package play
+boot_disk{
+not input.values.boot_disk
+}
+{
+input.values.boot_disk[0].auto_delete==false
+}
+{
+count(input.values.boot_disk)<1
+ }
+ 
+ 
+ disk_encryption_key_raw
+{
+input.values.boot_disk[_].disk_encryption_key_raw == null
+}
+{
+input.values.boot_disk[_].disk_encryption_key_raw == ""
+}
+{
+count(input.values.disk_encryption_key_raw)<1
+ }
+ 
+  
+ scopes
+{
+input.values.service_account[_].scopes[_] == null
+}
+{
+input.values.service_account[_].scopes[_] == ""
+}
+{
+input.values.service_account[_].scopes[_] == "https://www.googleapis.com/auth/cloud-platform"
+}
+{
+count(input.values.service_account[_].scopes)<1
+ }
+ 
+ 
+ 
+enable_oslogin{
+input.values.metadata.enable_oslogin == false
+}
+
+
+ssh_keys{
+input.values.metadata.block_project_ssh_keys == false
+}
+
+
+serial_port{
+input.values.metadata.serial_port_enable == true
+}
+
+can_ip_forward
+{
+input.values.can_ip_forward == false
+}
+
+
+ email
+{
+input.values.service_account[_].email == null
+}
+{
+input.values.service_account[_].email == "[PROJECT_NUMBER]-compute@developer.gserviceaccount.com"
+}
+{
+count(input.values.service_account)<1
+ }
+ {
+ input.values.service_account[_].email == ""
+ }
+ 
+ 
+ssh_keys_msg="VM instances have block project-wide SSH keys feature disabled" {
+ssh_keys==true
+}else=""
+
+can_ip_forward_msg=" IP forwarding on instances should be disable" {
+can_ip_forward ==true
+}else=""
+
+serial_port_msg="VM instances should not have serial port" {
+serial_port==true
+}else=""
+
+enable_oslogin_msg="Project instance should enable the OSLogin" {
+ enable_oslogin==true
+}else=""
+
+email_msg="Instances do not use default Compute Engine service account" {
+email==true
+}else=""
+
+
+scopes_msg="Instances do not use default service account with full access to cloud APIs" {
+scopes==true
+}else=""
+
+boot_disk_msg="Boot disk should be enabled" {
+boot_disk==true
+}else=""
+
+disk_encryption_key_raw_msg="Disk Encryption should be enabled" {
+disk_encryption_key_raw==true
+}else=""
+
+policyResult := {
+"boot_disk":{
+"msg" : boot_disk_msg
+},
+"disk_encryption_key_raw":{
+"msg" : disk_encryption_key_raw_msg
+},
+"email":{
+"msg" : email_msg
+},
+"scopes":{
+"msg" : scopes_msg
+},
+"ssh_keys":{
+"msg" : ssh_keys_msg
+},
+"enable_oslogin":{
+"msg" : enable_oslogin_msg
+},
+"serial_port":{
+"msg" : serial_port_msg
+},
+"can_ip_forward":{
+"msg" : can_ip_forward_msg
+}
+}
+
+

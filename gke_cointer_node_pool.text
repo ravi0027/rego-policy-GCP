@@ -1,0 +1,41 @@
+package policy
+
+network_config_msg="Network Policy is not enabled on Kubernetes Engine Clusters"{
+count(input.sensitive_values.network_config)<1
+}else=""
+
+auto_repair_enable{
+count(input.values.management)<1
+}{
+input.values.management[0].auto_repair!=true
+}
+
+auto_repair_msg="Auto repair for node pool is not enabled"{
+auto_repair_enable==true
+}else=""
+
+auto_upgrade_enable{
+count(input.values.management)<1
+}{
+input.values.management[0].auto_upgrade!=true
+}
+node_image_cos{
+count(input.values.node_config)<1
+}{
+input.values.node_config[0].image_type!="COS"
+}
+
+node_image_cos_msg="Container-Optimized OS (cos) is not used for Kubernetes Engine Clusters Node image"
+{
+node_image_cos==true
+}else=""
+
+auto_upgrade_msg="Auto repair for node pool is not enabled"{
+auto_upgrade_enable==true
+}else=""
+
+policyResult := {
+"network_config" : {
+"msg" : network_config_msg
+}
+}

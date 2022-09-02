@@ -1,0 +1,46 @@
+package play
+dnssec_config
+  {
+ input.values.dnssec_config[_].kind =null
+ }
+ {
+ input.values.dnssec_config[_].kind =""
+ }
+ {
+ input.values.dnssec_config[_].kind !="dns#managedZoneDnsSecConfig"
+ }
+ {
+  input.values.dnssec_config[_].non_existence =""
+ }
+ {
+  input.values.dnssec_config[_].non_existence !="nsec3"
+ }
+  {
+  input.values.dnssec_config[_].non_existence =null
+ }
+ {
+  input.values.dnssec_config[_].state !="on"
+ }
+  {
+  input.values.dnssec_config[_].state =null
+ }
+  {
+  input.values.dnssec_config[_].state =""
+ }
+ 
+ {
+count(input.values.dnssec_config)<1
+ }
+ 
+dnssec_config_msg="GCP Cloud DNS should be  enabled"{
+dnssec_config ==true
+}else=""
+
+policyResult := {
+"dnssec_config":{
+"msg" :dnssec_config_msg
+}
+}
+
+
+    

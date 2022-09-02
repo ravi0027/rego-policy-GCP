@@ -1,0 +1,18 @@
+package play
+auth_enabled
+{
+input.values.auth_enabled==false
+}
+
+auth_enabled_msg="Memorystore for Redis should be enabled"{
+auth_enabled==true
+}else=""
+
+
+policyResult := {
+"auth_enabled":{
+"msg" : auth_enabled_msg
+}
+}
+
+

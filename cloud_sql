@@ -1,0 +1,207 @@
+package play
+local_infile
+{
+input.values.settings[_].database_flags[_].name =="local_infile"
+input.values.settings[_].database_flags[_].value ="on"
+}
+
+ 
+ 
+ log_checkpoints
+{
+input.values.settings[_].database_flags[_].name =="log_checkpoints"
+input.values.settings[_].database_flags[_].value ="off"
+}
+
+ 
+ log_connections
+{
+input.values.settings[_].database_flags[_].name =="log_connections"
+input.values.settings[_].database_flags[_].value ="off"
+}
+
+ 
+ 
+ 
+ log_min
+{
+input.values.settings[_].database_flags[_].name =="log_min_duration_statement"
+input.values.settings[_].database_flags[_].value != -1
+}
+
+ 
+ null_case
+  {
+ input.values.settings[_].database_flags[_].value =""
+ }
+ {
+ input.values.settings[_].database_flags[_].value =null
+ }
+ {
+count(input.values.settings.database_flags)<1
+ }
+ 
+
+ log_disconnections
+{
+input.values.settings[_].database_flags[_].name =="log_disconnections"
+input.values.settings[_].database_flags[_].value ="off"
+}
+
+ 
+ 
+  log_lock_waits
+{
+input.values.settings[_].database_flags[_].name =="log_lock_waits"
+input.values.settings[_].database_flags[_].value ="off"
+}
+
+
+
+  log_min_messages
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value ="DEBUG5"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="DEBUG4"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="DEBUG3"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="DEBUG2"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="DEBUG1"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="INFO"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="NOTICE"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="WARNING"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="ERROR"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="LOG"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="PANIC"
+}
+{
+input.values.settings[_].database_flags[_].name =="log_min_messages"
+input.values.settings[_].database_flags[_].value =="FATAL"
+}
+
+
+log_temp_files
+{
+input.values.settings[_].database_flags[_].name =="log_temp_files"
+input.values.settings[_].database_flags[_].value !=0
+}
+
+cross
+{
+input.values.settings[_].database_flags[_].name =="cross db ownership chaining"
+input.values.settings[_].database_flags[_].value ="on"
+}
+
+ipv4_enabled
+{
+input.values.settings[_].ip_configuration[_].ipv4_enabled== true
+}
+
+ 
+null_case_msg="Database flags should be null or empty"{
+null_case ==true
+}else=""
+
+local_infile_msg="Database flags should be disabled for MSQL"{
+local_infile==true
+}else=""
+
+log_checkpoints_msg="Database flags should be enabled for POSTGRES Logs Checkpoints"{
+log_checkpoints==true
+}else=""
+  
+log_connections_msg="Database flags should be enabled for POSTGRES Logs Connections"{
+log_connections==true
+}else=""
+ 
+log_min_msg="Database flags is set to be -1 for minimum duration"{
+log_min==true
+}else=""
+ 
+log_disconnections_msg="Database flags should be enabled for POSTGRES Logs Disconnections"{
+log_disconnections==true
+}else=""
+
+log_lock_waits_msg="Database flags should be enabled for POSTGRES Logs Lock Waits"{
+log_lock_waits==true
+}else=""
+
+log_min_messages_msg="Database flags should be enabled for POSTGRES Logs Lock Min Messages"{
+log_min_messages==true
+}else=""
+
+log_temp_files_msg="GCP PostgreSQL instance database flag log_temp_files is not set to 0"{
+log_temp_files==true
+}else=""
+
+cross_msg="Cloud SQL SQL server instance database flag cross db ownership chaining is set to On"{
+cross==true
+}else=""
+
+ipv4_enabled_msg="Cloud SQL database instances have public IPs"{
+ipv4_enabled==true
+}else=""
+
+
+
+
+policyResult := {
+"local_infile":{
+"msg" :local_infile_msg
+},
+"null_case":{
+"msg" :null_case_msg
+},
+"log_connections":{
+"msg" : log_connections_msg
+},
+"log_disconnections":{
+"msg" : log_disconnections_msg
+},
+"log_lock_waits":{
+"msg" :log_lock_waits_msg
+},
+"log_min_messages":{
+"msg":log_min_messages_msg
+},
+"log_temp_files":{
+"msg" :log_temp_files_msg
+},
+"cross":{
+"msg" :cross_msg
+},
+"ipv4_enabled":{
+"msg" :ipv4_enabled_msg
+}
+}
+
+

@@ -1,0 +1,29 @@
+package play
+disk_encryption_key
+  {
+ input.values.disk_encryption_key[_].kms_key_self_link =null
+ }
+ {
+ input.values.disk_encryption_key[_].kms_key_self_link =""
+ }
+ {
+ input.values.disk_encryption_key[_].raw_key =null
+ }
+ {
+  input.values.disk_encryption_key[_].raw_key =""
+ }
+ {
+count(input.values.disk_encryption_key)<1
+ }
+ 
+disk_encryption_key_msg="Disk Encryption should not  be null or empty"{
+disk_encryption_key ==true
+}else=""
+
+policyResult := {
+"disk_encryption_key":{
+"msg" :disk_encryption_key_msg
+}
+}
+
+

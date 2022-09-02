@@ -1,0 +1,127 @@
+package policy
+enable_legacy_abac_msg="Legacy Authorization (ABAC) is enabled"{
+enable_legacy_abac:=input.values.enable_legacy_abac
+enable_legacy_abac==true
+}else = ""
+
+node_config_count = count(input.value.node_config)
+
+
+ip_allocation_policy_msg="Alias IP ranges is not enabled"{
+count(input.values.ip_allocation_policy)<1
+}else = ""
+
+private_cluster_config := input.values.private_cluster_config[0]
+private_cluster_config_disable{
+count(input.values.private_cluster_config)<1
+}{
+private_cluster_config.enable_private_nodes!=true
+}
+
+
+enable_binary_authorization_msg = "Binary authorization is not enabled"{
+input.values.enable_binary_authorization!=true
+}else = ""
+
+private_cluster_config_msg="Cluster is not priavte"{
+private_cluster_config_disable == true
+}else = ""
+
+node_config=input.values.node_config
+
+secure_boot_disable{
+count(node_config)<1
+}{
+count(node_config[0].shielded_instance_config)<1
+}
+{
+node_config[0].shielded_instance_config[0].enable_secure_boot!=true
+}
+
+secure_boot_msg="Secure Boot for Shielded GKE Nodes is not Enabled"{
+secure_boot_disable==true	
+}else=""
+
+release_channel_disable_msg="GKE Release Channel is not set"{
+count(input.sensitive_values.release_channel)<1
+}else = ""
+
+shielded_nodes_disable_msg="Shield node is not enabled"{
+input.values.enable_shielded_nodes!=true
+}else=""
+
+monitoring_enable_msg="Monitoring is not enabled"{
+count(input.sensitive_values.release_channel)<1
+}else=""
+
+client_cirt_msg = "Client certificate is not enabled"{
+count(input.sensitive_values.master_auth)<1
+}else=""
+
+private_control_plane_enable{
+count(input.values.private_cluster_config)<1
+}{
+contains(private_cluster_config.master_ipv4_cidr_block,"28")!=true
+}
+
+private_control_plane_msg="Control plane is not private"{
+private_control_plane_enable==true
+}else=""
+
+
+base_auth_enables = ""{
+not input.sensitive_values.basic_auth
+}else="Base auth is enabled"
+
+gke_metadata_server_enable{
+node_config_count<1
+}{
+count(node_config[0].workload_metadata_config)<1
+}
+{
+node_config[0].workload_metadata_config[0].mode!="GKE_METADATA"
+}
+
+gke_metadata_server_enable_msg="GKE meta data server is not enabled"{
+gke_metadata_server_enable==true
+}else=""
+
+logging_service_msg="Stackdriver Logging is not enabled on Kubernetes Engine Clusters"{
+count(input.sensitive_values.logging_config)<1
+}else=""
+
+policyResult := {
+"enable_legacy_abac" : {
+"msg" : enable_legacy_abac_msg,
+},
+"ip_allocation_policy" : {
+"msg" : ip_allocation_policy_msg
+},
+"private_cluster_config" : {
+"msg" : private_cluster_config_msg
+},
+"enable_binary_authorization" : {
+"msg" : enable_binary_authorization_msg
+},
+"secure_boot_disable" : {
+"msg" : secure_boot_msg
+},
+"release_channel_disable" : {
+"msg" : release_channel_disable_msg 
+},
+"shielded_nodes_disable" : {
+"msg" : shielded_nodes_disable_msg
+},
+"monitoring_enable" : {
+"msg" : monitoring_enable_msg
+},
+"client_cirt" : {
+"msg" : client_cirt_msg
+},
+"private_control_plane" :{
+"msg" : private_control_plane_msg
+},
+"base_auth" : {
+"msg" : base_auth_enables
+}
+}

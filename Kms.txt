@@ -1,0 +1,46 @@
+package play
+rotation_period
+{
+input.values.rotation_period =""
+}
+{
+input.values.rotation_period =null
+}
+{
+input.values.rotation_period =""
+}
+{
+not input.values.rotation_period = "7776000s"
+}
+
+
+members
+{
+input.values.members[_] =null
+}
+{
+input.values.members[_] =""
+}
+{
+input.values.members[_] = "allUsers"
+}
+{
+input.values.members[_] = "allAuthenticatedUsers"
+}
+
+rotation_period_msg="Rotation Period should be enabled for 90 days"{
+rotation_period==true
+}else=""
+members_msg="Kms Members should not  be enabled "{
+members==true
+}else=""
+  
+policyResult := {
+"rotation_period":{
+"msg" : rotation_period_msg
+},
+"members":{
+"msg" : members_msg
+}
+}
+

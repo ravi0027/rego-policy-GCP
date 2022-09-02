@@ -1,0 +1,19 @@
+package play
+
+internal_ip
+{
+ input.values.gce_cluster_config[_].internal_ip_only=false
+ }
+ {
+count(input.values.gce_cluster_config)<1
+ }
+ 
+internal_ip_msg ="GCP Dataproc cluster should not have public IP "{
+internal_ip==true
+}else=""
+
+policyResult := {
+"internal_ip_only":{
+"msg" :internal_ip_msg
+}
+}

@@ -1,0 +1,69 @@
+package play
+deny
+  {
+  input.values.deny[_].protocol =="ssh"
+ input.values.deny[_].ports[_] =="22"
+ }
+ {
+ input.values.deny[_].ports[_] =""
+ }
+  {
+ input.values.deny[_].ports[_] = null
+ }
+ 
+ source_ranges
+  {
+  input.values.source_ranges[_] == ""
+ }
+ {
+ input.values.source_ranges[_] = "0.0.0.0/0"
+ }
+  {
+ input.values.source_ranges[_] = null
+ }
+ {
+ count(input.values.source_ranges)<1
+ }
+ 
+ protocol
+  {
+  input.values.deny[_].protocol =="tcp"
+ input.values.deny[_].ports[_] =="3389"
+ }
+ {
+ input.values.deny[_].protocol =""
+ }
+  {
+ input.values.deny[_].protocol = null
+ }
+ {
+count(input.values.deny)<1
+ }
+ 
+source_ranges_msg="GCP Firewall rule should not allow all traffic"{
+source_ranges ==true
+}else=""
+
+deny_msg="GCP Firewall rule should  not allow all traffic on SSH port 22"{
+deny ==true
+}else=""
+
+protocol_msg="GCP Firewall rule should not allow all traffic on RDP port 3389"{
+protocol ==true
+}else=""
+
+policyResult := {
+"protocol":{
+"msg" :protocol_msg
+},
+"source_ranges":{
+"msg" :source_ranges_msg
+},
+
+"deny":{
+"msg" :deny_msg
+}
+
+}
+
+

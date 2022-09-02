@@ -1,0 +1,54 @@
+package play
+encryption
+{
+input.values.encryption =""
+}
+{
+input.values.encryption =null
+}
+{
+input.values.encryption =[]
+}
+
+
+uniform_bucket_level_access
+{
+input.values.uniform_bucket_level_access =false
+}
+
+logging
+{
+input.values.logging =""
+}
+{
+input.values.logging =null
+}
+{
+input.values.logging =[]
+}
+
+
+encryption_msg="Encryption should be enabled for bucket"{
+encryption==true
+}else=""
+uniform_msg="Uniform Bucket Level Access should be enabled for bucket"{
+uniform_bucket_level_access==true
+}else=""
+  
+logging_msg="Logs should be enabled for bucket"{
+logging==true
+}else=""
+  
+policyResult := {
+"encryption":{
+"msg" : encryption_msg
+},
+"uniform_bucket_level_access":{
+"msg" : uniform_msg
+},
+"logging":{
+"msg" : logging_msg
+}
+
+}
+
