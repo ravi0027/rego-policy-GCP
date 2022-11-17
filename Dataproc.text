@@ -5,17 +5,17 @@ resource_name = input.type
 policy_violations[violations] {
 	violations := {
 		"failed": has_members,
-		"error_description": "Ensure do not enable Members publicly accessible",
-		"error_key": "add_members_private",
+		"error_description": "Ensure GCP Dataproc Clusters do not have public IPs",
+		"error_key": "do_not_add_public_ips",
 		"resource_name": resource_name,
 		"severity": "LOW",
 	}
 }
 policy_violations[violations] {
 	violations := {
-		"failed": has_rotation_period,
-		"error_description": "Ensure GCP KMS encryption key is rotating every 90 days",
-		"error_key": "add_rotation_period_90days",
+		"failed": has_internal_ip,
+		"error_description": "Ensure GCP Dataproc cluster is not anonymously or publicly accessible",
+		"error_key": "add_private_ips",
 		"resource_name": resource_name,
 		"severity": "LOW",
 	}
@@ -33,23 +33,17 @@ input_members {
 {
 	input.values.members[_] = "allAuthenticatedUsers"
 }
- input_rotation_period{
-input.values.rotation_period =""
-}
-{
-input.values.rotation_period =null
-}
-{
-input.values.rotation_period =""
-}
-{
-not input.values.rotation_period = "7776000s"
-}
+ input_internal_ip{
+ input.values.gce_cluster_config[_].internal_ip_only=false
+ }
+ {
+count(input.values.gce_cluster_config)<1
+ }
 
 has_members {
 	input_members == true
 } else = false 
 
-has_rotation_period {
-	input_rotation_period == true
+has_internal_ip {
+	input_internal_ip == true
 } else = false 

@@ -1,18 +1,22 @@
 package play
-auth_enabled
-{
+
+resource_name = input.type
+
+policy_violations[violations] {
+	violations := {
+		"failed": has_auth_enabled,
+		"error_description": "Ensure Memorystore for Redis should be enabled",
+		"error_key": "add_memorystore",
+		"resource_name": resource_name,
+		"severity": "LOW",
+	}
+}
+
+
+input_auth_enabled {
 input.values.auth_enabled==false
 }
 
-auth_enabled_msg="Memorystore for Redis should be enabled"{
-auth_enabled==true
-}else=""
-
-
-policyResult := {
-"auth_enabled":{
-"msg" : auth_enabled_msg
-}
-}
-
-
+has_auth_enabled {
+	input_auth_enabled == true
+} else = false 

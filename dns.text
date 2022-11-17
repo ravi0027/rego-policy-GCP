@@ -1,6 +1,18 @@
 package play
-dnssec_config
-  {
+
+resource_name = input.type
+
+policy_violations[violations] {
+	violations := {
+		"failed": has_dnssec_config,
+		"error_description": "GCP Cloud DNS has DNSSEC enabled",
+		"error_key": "add_dns_enable",
+		"resource_name": resource_name,
+		"severity": "LOW",
+	}
+}
+
+input_dnssec_config {
  input.values.dnssec_config[_].kind =null
  }
  {
@@ -31,16 +43,8 @@ dnssec_config
  {
 count(input.values.dnssec_config)<1
  }
- 
-dnssec_config_msg="GCP Cloud DNS should be  enabled"{
-dnssec_config ==true
-}else=""
 
-policyResult := {
-"dnssec_config":{
-"msg" :dnssec_config_msg
-}
-}
+has_dnssec_config {
+	input_dnssec_config == true
+} else = false 
 
-
-    

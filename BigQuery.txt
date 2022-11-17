@@ -1,0 +1,32 @@
+package play
+
+resource_name = input.type
+
+policy_violations[violations] {
+	violations := {
+		"failed": has_members,
+		"error_description": "Ensure do not enable BigQuery Members publicly accessible",
+		"error_key": "add_bigquery_members_private",
+		"resource_name": resource_name,
+		"severity": "LOW",
+	}
+}
+
+input_members {
+	input.values.members[_] = null
+}
+{
+	input.values.members[_] = ""
+}
+{
+	input.values.members[_] = "allUsers"
+}
+{
+	input.values.members[_] = "allAuthenticatedUsers"
+}
+
+
+
+has_members {
+	input_members == true
+} else = false

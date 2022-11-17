@@ -1,6 +1,19 @@
 package play
-disk_encryption_key
-  {
+
+resource_name = input.type
+
+policy_violations[violations] {
+	violations := {
+		"failed": has_disk_encryption_key,
+		"error_description": "Ensure Disk Encryption should not  be null or empty",
+		"error_key": "add_disk_encryption",
+		"resource_name": resource_name,
+		"severity": "LOW",
+	}
+}
+
+
+input_disk_encryption_key {
  input.values.disk_encryption_key[_].kms_key_self_link =null
  }
  {
@@ -15,15 +28,7 @@ disk_encryption_key
  {
 count(input.values.disk_encryption_key)<1
  }
- 
-disk_encryption_key_msg="Disk Encryption should not  be null or empty"{
-disk_encryption_key ==true
-}else=""
 
-policyResult := {
-"disk_encryption_key":{
-"msg" :disk_encryption_key_msg
-}
-}
-
-
+has_disk_encryption_key {
+	input_disk_encryption_key == true
+} else = false 
